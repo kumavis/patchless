@@ -1,6 +1,8 @@
 
 # patchless
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumavis/patchless.svg)](https://greenkeeper.io/)
+
 patchless is a _standard_ for modular ui apps.
 It's primarily intended for secure scuttlebutt,
 but not actually directly coupled to ssb.
