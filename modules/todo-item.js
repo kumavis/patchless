@@ -8,6 +8,7 @@ var moduleName = 'todos'
 
 exports.needs = {
   sbot: {
+    get: 'first',
     createLogStream: 'first',
     links: 'first',
   },
@@ -33,54 +34,38 @@ function renderLayout(msg, api) {
     h('div.todo__wrapper', [
       renderCore(msg, api),
       h('label.todoLabel', `${msg.value.content.text}`),
-      h('button', {
-        onclick: function (ev) {
-          console.log('clicked!')
-        },
-      }, 'toggle')
     ])
   )
 }
 
 
-function renderCore(msg, api) {
+function renderCore(msg, api) {  
   const checkbox = (
     h('input.todoInput', {
       type: 'checkbox',
-      onclick: function (ev) {
-        console.log('clicked!')
-        const status = ev.target.checked
-        console.log('status:', status)
-      },
-      oninput: function (ev) {
-        console.log('hey...')
-        const status = ev.target.checked
-        console.log('status:', status)
-      },
       onchange: function (ev) {
-        console.log('hey...')
-
         const status = ev.target.checked
-        console.log('status:', status)
-        // api.confirm.show({
-        //   type: 'todo-action',
-        //   vote: {
-        //     link: msg.key, value: 1, expression: 'yup'
-        //   }
-        // }, null, function () {})
+        api.confirm.show({
+          type: 'todoaction',
+          action: {
+            link: msg.key,
+            value: status,
+          }
+        }, null, function () {})
       },
     })
   )
 
-  checkbox.addEventListener('click', () => console.log('clack!'))
-
-  // pull(
-  //   api.sbot.links({ dest: msg.key, rel: 'todo-action' }),
-  //   pull.drain(function (e) {
-  //     console.log('link:', e)
-  //     checkbox.checked = e.content.value
-  //   })
-  // )
+  // load all actions for the todo
+  pull(
+    api.sbot.links({ dest: msg.key, rel: 'action' }),
+    pull.asyncMap((e, cb) => {
+      api.sbot.get(e.key, cb)
+    }),
+    pull.drain(function (e) {
+      checkbox.checked = e.content.action.value
+    })
+  )
 
   return checkbox
 }

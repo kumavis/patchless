@@ -12,6 +12,7 @@ exports.needs = {
     links: 'first',
   },
   todo: { layout: 'first' },
+  confirm: { show: 'first' },
 }
 
 exports.gives = {
@@ -23,9 +24,17 @@ exports.create = function (api) {
   return {
     app: {
       view: function (src) {
-        if(src !== moduleName) return 
+        if(src !== moduleName) return
 
-        var content = h('div.content')
+        var content = h('div.content', [
+          h('input#todo-form-label'),
+          h('button', {
+            onclick: () => {
+              const text = document.querySelector('#todo-form-label').value
+              createTodo(api, text)
+            }
+          }, 'create')
+        ])
 
         function createStream (opts) {
           return pull(
@@ -57,3 +66,9 @@ exports.create = function (api) {
   }
 }
 
+function createTodo(api, text){
+  api.confirm.show({
+    type: 'todo',
+    text: text,
+  }, null, function () {})
+}
