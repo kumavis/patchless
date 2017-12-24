@@ -35,9 +35,6 @@ exports.create = function (api) {
         function createStream (opts) {
           return pull(
             More(api.sbot.createLogStream, opts),
-            pull.filter(function (data) {
-              return 'string' === typeof data.value.content.text
-            }),
             pull.map(rawJSON)
           )
         }
