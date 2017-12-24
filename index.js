@@ -14,8 +14,8 @@ require('patchapp-threads'),
 {
   //choose which layout you like, these all work
 
-//  nav: require('patchnav-less'),
-//  require('patchnav-basic'),
+ // nav: require('patchnav-less'),
+ // nav: require('patchnav-basic'),
   nav:  require('patchnav-tabs'),
 
 //TEMP, MOVE ALL MODULES TO NPM
@@ -55,7 +55,9 @@ require('patchcompose-drafts'),
 require('patchcompose-file'),
 //support old style mentions, so that patchwork users get notifications on mentions
 require('patchcompose-legacy-mentions'),
-require('./modules/copy-id')
+require('./modules/copy-id'),
+require('./modules/todos'),
+require('./modules/todo-item'),
 ])
 
 
